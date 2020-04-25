@@ -82,7 +82,7 @@ class EventRecord(base):
     button_event_type = Column(Integer, comment="进行了什么样子的按键操作", server_default="0")
 
 
-base.metadata.create_all(engine,)
+base.metadata.create_all(engine, )
 
 session = sessionmaker(bind=engine)
 
@@ -134,7 +134,7 @@ class KeyboardMonitor(object):
             logger.info("keyboard monitor starting...")
             # 监听键盘按键
             with keyboard.Listener(
-                on_press=on_press, on_release=on_release
+                    on_press=on_press, on_release=on_release
             ) as _listener:
                 _listener.join()
 
@@ -178,7 +178,7 @@ class MouseMonitor(object):
 
             # #监听鼠标
             with mouse.Listener(
-                on_move=on_move, on_click=on_click, on_scroll=on_scroll
+                    on_move=on_move, on_click=on_click, on_scroll=on_scroll
             ) as _listener:
                 _listener.join()
 
@@ -225,6 +225,7 @@ def show(x: list, y: list):
         }
     )
 
+    bar.load_javascript()
     bar.render_notebook()
 
     return Markup(bar.render_embed())
@@ -278,6 +279,7 @@ def index():
         y.append(record[0])
 
     return show(x, y)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
