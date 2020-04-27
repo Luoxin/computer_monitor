@@ -1,5 +1,5 @@
 {%- macro render_chart_content(c) -%}
-    <div id="{{ c.chart_id }}" class="chart-container" style="width:{{ c.width }}; height:{{ c.height }};"></div>
+    <div id="{{ c.chart_id }}" class="chart-container" style="width:4096; height:{{ c.height }};"></div>
     <script>
         var chart_{{ c.chart_id }} = echarts.init(
             document.getElementById('{{ c.chart_id }}'), '{{ c.theme }}', {renderer: '{{ c.renderer }}'});

@@ -60,9 +60,12 @@ base = declarative_base()
 engine = create_engine(
     "sqlite:///.db?check_same_thread=false",
     poolclass=SingletonThreadPool,
-    pool_size=128,
+    pool_size=8,
     pool_recycle=3600,
     pool_pre_ping=True,
+    hide_parameters=False,
+    encoding="utf-8",
+    echo_pool=True,
 )
 
 
@@ -82,7 +85,7 @@ class EventRecord(base):
     button_event_type = Column(Integer, comment="进行了什么样子的按键操作", server_default="0")
 
 
-base.metadata.create_all(engine,)
+base.metadata.create_all(engine, )
 
 session = sessionmaker(bind=engine)
 
@@ -134,7 +137,7 @@ class KeyboardMonitor(object):
             logger.info("keyboard monitor starting...")
             # 监听键盘按键
             with keyboard.Listener(
-                on_press=on_press, on_release=on_release
+                    on_press=on_press, on_release=on_release
             ) as _listener:
                 _listener.join()
 
@@ -178,7 +181,7 @@ class MouseMonitor(object):
 
             # #监听鼠标
             with mouse.Listener(
-                on_move=on_move, on_click=on_click, on_scroll=on_scroll
+                    on_move=on_move, on_click=on_click, on_scroll=on_scroll
             ) as _listener:
                 _listener.join()
 
