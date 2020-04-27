@@ -82,7 +82,7 @@ class EventRecord(base):
     button_event_type = Column(Integer, comment="进行了什么样子的按键操作", server_default="0")
 
 
-base.metadata.create_all(engine, )
+base.metadata.create_all(engine,)
 
 session = sessionmaker(bind=engine)
 
@@ -134,7 +134,7 @@ class KeyboardMonitor(object):
             logger.info("keyboard monitor starting...")
             # 监听键盘按键
             with keyboard.Listener(
-                    on_press=on_press, on_release=on_release
+                on_press=on_press, on_release=on_release
             ) as _listener:
                 _listener.join()
 
@@ -178,7 +178,7 @@ class MouseMonitor(object):
 
             # #监听鼠标
             with mouse.Listener(
-                    on_move=on_move, on_click=on_click, on_scroll=on_scroll
+                on_move=on_move, on_click=on_click, on_scroll=on_scroll
             ) as _listener:
                 _listener.join()
 
@@ -203,7 +203,7 @@ def add_event(event: EventRecord):
 app = Flask(__name__, static_folder="templates")
 
 
-def show(x: list, y: list):
+def show(x: list, y: list, title: str = "键盘键入统计"):
     bar = Bar(init_opts=opts.InitOpts(theme=ThemeType.WONDERLAND))
     bar.add_xaxis(x)
     bar.add_yaxis("", y, category_gap="60%")
@@ -223,6 +223,10 @@ def show(x: list, y: list):
                 "shadowColor": "rgb(0, 160, 221)",
             }
         }
+    )
+    bar.set_global_opts(
+        title_opts=opts.TitleOpts(title=title),
+        datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")],
     )
 
     bar.load_javascript()
@@ -245,10 +249,9 @@ def yesterday():
         x.append(record[1])
         y.append(record[0])
 
-    return show(x, y)
+    return show(x, y, "昨日代码统计")
 
 
-@app.route("/")
 @app.route("/today")
 def today():
     x = []
@@ -263,7 +266,7 @@ def today():
         x.append(record[1])
         y.append(record[0])
 
-    return show(x, y)
+    return show(x, y, "当天键盘统计")
 
 
 @app.route("/")
@@ -278,8 +281,8 @@ def index():
         x.append(record[1])
         y.append(record[0])
 
-    return show(x, y)
+    return show(x, y, "历史记录")
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=2005, debug=True)
